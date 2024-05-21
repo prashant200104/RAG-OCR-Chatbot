@@ -32,7 +32,7 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 # Set the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
-def pdf_to_images(pdf_file: BytesIO) -> List[str]:
+def pdf_to_images(pdf_file):
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_pdf_path = os.path.join(temp_dir, "temp.pdf")
         
@@ -45,18 +45,24 @@ def pdf_to_images(pdf_file: BytesIO) -> List[str]:
         # Convert PDF to images
         try:
             images = convert_from_path(temp_pdf_path)
+            if images is None:
+                logging.error("No images found in the PDF.")
+                return []
             logging.debug(f"Generated {len(images)} images from PDF")
         except Exception as e:
             logging.error(f"Error generating images: {e}")
-            raise
+            return []
         
         # Save images to temporary directory and return paths
         image_paths = []
         for i, image in enumerate(images):
             image_path = os.path.join(temp_dir, f"page_{i+1}.png")
-            image.save(image_path, 'PNG')
-            image_paths.append(image_path)
-            logging.debug(f"Saved image {i+1} at {image_path}")
+            try:
+                image.save(image_path)
+                logging.debug(f"Saved image {i+1} at {image_path}")
+                image_paths.append(image_path)
+            except Exception as e:
+                logging.error(f"Error saving image {i+1}: {e}")
         
         return image_paths
 
