@@ -40,14 +40,32 @@ import faiss
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 def pdf_to_images(pdf_file):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        temp_pdf.write(pdf_file.read())
-        temp_pdf_path = temp_pdf.name
-
-    images = convert_from_path(temp_pdf_path)
-    os.unlink(temp_pdf_path)
-
-    return images
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_pdf_path = os.path.join(temp_dir, "temp.pdf")
+        
+        # Save PDF file to a temporary path
+        with open(temp_pdf_path, "wb") as f:
+            f.write(pdf_file.read())
+        
+        logging.debug(f"Temporary PDF path: {temp_pdf_path}")
+        
+        # Convert PDF to images
+        try:
+            images = convert_from_path(temp_pdf_path)
+            logging.debug(f"Generated {len(images)} images from PDF")
+        except Exception as e:
+            logging.error(f"Error generating images: {e}")
+            raise
+        
+        # Save images to temporary directory and return paths
+        image_paths = []
+        for i, image in enumerate(images):
+            image_path = os.path.join(temp_dir, f"page_{i+1}.png")
+            image.save(image_path, 'PNG')
+            image_paths.append(image_path)
+            logging.debug(f"Saved image {i+1} at {image_path}")
+        
+        return image_paths
 
 def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
     output = []
