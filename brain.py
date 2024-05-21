@@ -75,6 +75,7 @@ def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
         text = re.sub(r"\n\s*\n", "\n\n", text)
         output.append(text)
     return output, filename
+
 def text_to_docs(text: List[str], filename: str) -> List[Document]:
     if isinstance(text, str):
         text = [text]
