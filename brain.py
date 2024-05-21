@@ -62,19 +62,25 @@ def pdf_to_images(pdf_file: BytesIO) -> List[str]:
 
 def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
     output = []
-    logging.info(f"Parsing PDF: {filename}")
+    logging.info(f"Parsing PDF: {pdf_name}")
     images = pdf_to_images(pdf_file)
     # Process the images (e.g., perform OCR)
-    for i, image_path in enumerate(images, start=1):
-        # Perform OCR on the image
-        text = pytesseract.image_to_string(Image.open(image_path))
+    for i, image in enumerate(images, start=1):
+        image_path = f'image_{i}.jpg'  # Save each image with a unique name
+        image.save(image_path)
 
-        print(f"Page {i} OCR result:")
-        # Clean up extracted text
-        text = re.sub(r"(\w+)-\n(\w+)", r"\1\2", text)
-        text = re.sub(r"(?<!\n\s)\n(?!\s\n)", " ", text.strip())
-        text = re.sub(r"\n\s*\n", "\n\n", text)
-        output.append(text)
+        # Perform OCR on the image
+        if os.path.exists(image_path):
+            text = pytesseract.image_to_string(Image.open(image_path))
+            print(f"Page {i} OCR result:")
+            # Clean up extracted text
+            text = re.sub(r"(\w+)-\n(\w+)", r"\1\2", text)
+            text = re.sub(r"(?<!\n\s)\n(?!\s\n)", " ", text.strip())
+            text = re.sub(r"\n\s*\n", "\n\n", text)
+            output.append(text)
+        else:
+            print(f"Error: Image file not found: {image_path}")
+
     return output, filename
 
 def text_to_docs(text: List[str], filename: str) -> List[Document]:
