@@ -68,23 +68,27 @@ def pdf_to_images(pdf_file):
 
 def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
     output = []
-    logging.info(f"Parsing PDF: {filename}")  # Change pdf_name to filename
+    logging.info(f"Parsing PDF: {pdf_name}")
     images = pdf_to_images(pdf_file)
     # Process the images (e.g., perform OCR)
-    for i, image in enumerate(images, start=1):
-        image_path = f'image_{i}.jpg'  # Save each image with a unique name
-        image.save(image_path)
+    for i, image_path in enumerate(images, start=1):
+        # Open the image using PIL
+        try:
+            with Image.open(image_path) as image:
+                # Perform OCR on the image
+                text = pytesseract.image_to_string(image)
 
-        # Perform OCR on the image
-        text = pytesseract.image_to_string(Image.open(image_path))
-        print(f"Page {i} OCR result:")
-        # Clean up extracted text
-        text = re.sub(r"(\w+)-\n(\w+)", r"\1\2", text)
-        text = re.sub(r"(?<!\n\s)\n(?!\s\n)", " ", text.strip())
-        text = re.sub(r"\n\s*\n", "\n\n", text)
-        output.append(text)
-
+                print(f"Page {i} OCR result:")
+                # Clean up extracted text
+                text = re.sub(r"(\w+)-\n(\w+)", r"\1\2", text)
+                text = re.sub(r"(?<!\n\s)\n(?!\s\n)", " ", text.strip())
+                text = re.sub(r"\n\s*\n", "\n\n", text)
+                output.append(text)
+        except Exception as e:
+            logging.error(f"Error processing image {i}: {e}")
+            output.append("")  # Add an empty string for failed pages
     return output, filename
+
 
 def text_to_docs(text: List[str], filename: str) -> List[Document]:
     if isinstance(text, str):
