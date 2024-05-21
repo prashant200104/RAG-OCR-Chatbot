@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
+from langchain.docstore.document import Document
 
 # Load environment variables
 load_dotenv()
