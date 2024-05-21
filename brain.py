@@ -4,13 +4,18 @@ from io import BytesIO
 from typing import Tuple, List
 import streamlit as st
 import tempfile
+import logging
 from dotenv import load_dotenv
+from pdf2image import convert_from_path
+from PIL import Image
+import pytesseract
+from langchain.docstore.document import Document
 
 # Load environment variables
 load_dotenv()
 
-# Set the TESSDATA_PREFIX environment variable
-tessdata_dir = "/usr/share/tessdata"
+# Set the TESSDATA_PREFIX environment variable to the current directory
+tessdata_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ["TESSDATA_PREFIX"] = tessdata_dir
 
 # Debug: Print the TESSDATA_PREFIX value
@@ -23,6 +28,9 @@ assert os.path.exists(tessdata_path), \
 
 # Set other environment variables or configurations
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
+# Set the path to the Tesseract executable
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 from langchain.docstore.document import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
