@@ -6,10 +6,12 @@ import streamlit as st
 import tempfile
 import logging
 from dotenv import load_dotenv
+from pdf2image import convert_from_path
+from PIL import Image
+import pytesseract
 
 # Load environment variables
 load_dotenv()
-
 
 # Set the TESSDATA_PREFIX environment variable to the current directory
 tessdata_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,24 +25,13 @@ tessdata_path = os.path.join(tessdata_dir, "eng.traineddata")
 assert os.path.exists(tessdata_path), \
     f"TESSDATA_PREFIX is not set correctly or eng.traineddata is missing. Expected at {tessdata_path}"
 
-
 # Set other environment variables or configurations
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-
-from langchain.docstore.document import Document
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores.faiss import FAISS
-from pypdf import PdfReader
-from pdf2image import convert_from_path
-from PIL import Image
-import pytesseract
-import faiss
 
 # Set the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
-def pdf_to_images(pdf_file):
+def pdf_to_images(pdf_file: BytesIO) -> List[str]:
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_pdf_path = os.path.join(temp_dir, "temp.pdf")
         
@@ -70,13 +61,10 @@ def pdf_to_images(pdf_file):
 
 def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
     output = []
-    logging.info(f"Parsing PDF: {pdf_name}")
+    logging.info(f"Parsing PDF: {filename}")
     images = pdf_to_images(pdf_file)
     # Process the images (e.g., perform OCR)
-    for i, image in enumerate(images, start=1):
-        image_path = f'image_{i}.jpg'  # Save each image with a unique name
-        image.save(image_path)
-
+    for i, image_path in enumerate(images, start=1):
         # Perform OCR on the image
         text = pytesseract.image_to_string(Image.open(image_path))
 
@@ -87,7 +75,6 @@ def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
         text = re.sub(r"\n\s*\n", "\n\n", text)
         output.append(text)
     return output, filename
-
 def text_to_docs(text: List[str], filename: str) -> List[Document]:
     if isinstance(text, str):
         text = [text]
