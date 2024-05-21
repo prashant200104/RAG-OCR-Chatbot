@@ -70,6 +70,7 @@ def pdf_to_images(pdf_file):
 
 def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
     output = []
+    logging.info(f"Parsing PDF: {pdf_name}")
     images = pdf_to_images(pdf_file)
     # Process the images (e.g., perform OCR)
     for i, image in enumerate(images, start=1):
