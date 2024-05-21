@@ -12,9 +12,7 @@ load_dotenv()
 # Set the TESSDATA_PREFIX environment variable
 tessdata_dir = "/usr/share/tessdata"
 # os.environ["TESSDATA_PREFIX"] = tessdata_dir
-#os.environ["TESSDATA_PREFIX"] = "/usr/share/tessdata"
-sudo mkdir -p /usr/share/tessdata
-sudo wget -P /usr/share/tessdata https://github.com/tesseract-ocr/tessdata/raw/main/eng.traineddata
+os.environ["TESSDATA_PREFIX"] = eng.traineddata
 
 
 # Debug: Print the TESSDATA_PREFIX value
