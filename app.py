@@ -23,7 +23,7 @@ from langchain_community.vectorstores import FAISS
 
 
 # Set the title for the Streamlit app
-st.title("RAG enhanced Chatbot")
+st.title("RAG-OCR enhanced Chatbot")
 
 # Set up the OpenAI API key from databutton secrets
 ## load the GROQ And OpenAI API KEY 
