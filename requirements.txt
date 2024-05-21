@@ -12,3 +12,4 @@ streamlit
 databutton
 pysqlite3-binary
 langchain-community
+pdfinfo
