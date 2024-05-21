@@ -66,9 +66,10 @@ def pdf_to_images(pdf_file):
         
         return image_paths
 
+
 def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
     output = []
-    logging.info(f"Parsing PDF: {pdf_name}")
+    logging.info(f"Parsing PDF: {filename}")  # Corrected variable name here
     images = pdf_to_images(pdf_file)
     # Process the images (e.g., perform OCR)
     for i, image_path in enumerate(images, start=1):
@@ -88,6 +89,7 @@ def parse_pdf(pdf_file: BytesIO, filename: str) -> Tuple[List[str], str]:
             logging.error(f"Error processing image {i}: {e}")
             output.append("")  # Add an empty string for failed pages
     return output, filename
+
 
 
 def text_to_docs(text: List[str], filename: str) -> List[Document]:
