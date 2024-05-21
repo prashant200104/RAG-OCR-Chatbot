@@ -4,6 +4,7 @@ from io import BytesIO
 from typing import Tuple, List
 import streamlit as st
 import tempfile
+import logging
 from dotenv import load_dotenv
 
 # Load environment variables
