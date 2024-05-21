@@ -1,10 +1,13 @@
-pip install databutton
-pip install streamlit
-pip install python-dotenv
-pip install pypdf2
-pip install pytesseract
-pip install PyMuPDF
-pip install pdf2image
-pip install openai
-pip install langchain
-
+python-dotenv
+pypdf2
+pytesseract
+PyMuPDF
+pdf2image
+openai
+langchain
+faiss-cpu
+pypdf
+tiktoken
+streamlit
+databutton
+pysqlite3-binary
