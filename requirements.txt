@@ -1,0 +1,10 @@
+pip install databutton
+pip install streamlit
+pip install python-dotenv
+pip install pypdf2
+pip install pytesseract
+pip install PyMuPDF
+pip install pdf2image
+pip install openai
+pip install langchain
+
