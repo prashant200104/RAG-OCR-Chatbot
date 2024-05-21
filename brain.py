@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Set the TESSDATA_PREFIX environment variable
-tessdata_dir = "/usr/share/tessdata"
+#tessdata_dir = "/usr/share/tessdata"
 # os.environ["TESSDATA_PREFIX"] = tessdata_dir
 os.environ["TESSDATA_PREFIX"] = eng.traineddata
 
