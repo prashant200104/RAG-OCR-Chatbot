@@ -11,7 +11,8 @@ load_dotenv()
 
 # Set the TESSDATA_PREFIX environment variable
 tessdata_dir = "/usr/share/tessdata"
-os.environ["TESSDATA_PREFIX"] = tessdata_dir
+# os.environ["TESSDATA_PREFIX"] = tessdata_dir
+os.environ["TESSDATA_PREFIX"] = "/usr/share/tessdata"
 
 # Debug: Print the TESSDATA_PREFIX value
 print(f"TESSDATA_PREFIX set to: {os.environ['TESSDATA_PREFIX']}")
