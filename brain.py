@@ -9,11 +9,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Set the TESSDATA_PREFIX environment variable
-#tessdata_dir = "/usr/share/tessdata"
-# os.environ["TESSDATA_PREFIX"] = tessdata_dir
-os.environ["TESSDATA_PREFIX"] = "eng.traineddata"
 
+# Set the TESSDATA_PREFIX environment variable to the current directory
+tessdata_dir = os.path.dirname(os.path.abspath(__file__))
+os.environ["TESSDATA_PREFIX"] = tessdata_dir
 
 # Debug: Print the TESSDATA_PREFIX value
 print(f"TESSDATA_PREFIX set to: {os.environ['TESSDATA_PREFIX']}")
@@ -22,6 +21,7 @@ print(f"TESSDATA_PREFIX set to: {os.environ['TESSDATA_PREFIX']}")
 tessdata_path = os.path.join(tessdata_dir, "eng.traineddata")
 assert os.path.exists(tessdata_path), \
     f"TESSDATA_PREFIX is not set correctly or eng.traineddata is missing. Expected at {tessdata_path}"
+
 
 # Set other environment variables or configurations
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
