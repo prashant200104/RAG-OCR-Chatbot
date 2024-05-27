@@ -32,10 +32,10 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 # Set the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
-from langchain.docstore.document import Document
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.docstore.document import Document
+from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores.faiss import FAISS
+from langchain_community.vectorstores import FAISS
 from pypdf import PdfReader
 from pdf2image import convert_from_path
 from PIL import Image
