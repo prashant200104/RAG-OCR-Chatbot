@@ -117,9 +117,7 @@ prompt_template = """
 
     Keep answer correct and to the point. Try to answer from context first.
 
-	if i ask any question, collect answers from all pdf's and then give me add of all answers.
-	
-	Give answer in very detail and in proper order.
+    If you did not get any relent solution print Dit not fet any relevent solution
     
     The evidence are the context of the pdf extract with metadata. 
     
