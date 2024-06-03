@@ -117,7 +117,9 @@ prompt_template = """
 
     Keep answer correct and to the point. Try to answer from context first.
 
-    If the answer is not in the context, answer should be 'this is most likely not given in the context, modify the question may be?'
+	if i ask any question, collect answers from all pdf's and then give me add of all answers.
+	
+	Give answer in very detail and in proper order.
     
     The evidence are the context of the pdf extract with metadata. 
     
