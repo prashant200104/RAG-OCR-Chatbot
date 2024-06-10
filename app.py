@@ -166,9 +166,10 @@ def generate_initial_responses(pdf_extracts, question, document_names):
     combined_responses = []
     for extract, doc_name in zip(pdf_extracts, document_names):
         individual_prompt = prompt_template.format(pdf_extract=extract)
+        client = openai.OpenAI(api_key=openai_api_key)
         response = []
         try:
-            completion = openai.ChatCompletion.create(
+            completion = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "system", "content": individual_prompt}, {"role": "user", "content": question}],
                 temperature=0.6,
@@ -227,7 +228,7 @@ def handle_user_input(question):
 
     # Combine responses for final refinement
     combined_response_text = "\n\n".join([response for _, response in combined_responses])
-    final_result = refine_combined_response(combined_response_text, question)
+    #final_result = refine_combined_response(combined_response_text, question)
 
     st.session_state.prompt.append({"role": "user", "content": question})
     with st.chat_message("user"):
@@ -235,9 +236,9 @@ def handle_user_input(question):
 
     with st.chat_message("assistant"):
         botmsg = st.empty()
-        botmsg.write(final_result)
+        botmsg.write(combined_response_text)
 
-    st.session_state.prompt.append({"role": "assistant", "content": final_result})
+    st.session_state.prompt.append({"role": "assistant", "content": combined_response_text})
 
 def main():
     initialize_session_state()
