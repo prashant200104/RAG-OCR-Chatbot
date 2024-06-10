@@ -73,7 +73,7 @@ def refine_combined_response(combined_response_text, question):
     """
     final_response = []
     try:
-        refinement = openai.ChatCompletion.create(
+        refinement = openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": formatted_prompt}],
             temperature=0.6,
