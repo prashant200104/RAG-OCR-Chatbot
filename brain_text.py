@@ -14,6 +14,7 @@ import faiss
 from pdfminer.high_level import extract_text_to_fp
 from pdfminer.layout import LAParams
 import tabula
+import streamlit as st
 
 # Load environment variables
 load_dotenv()
