@@ -243,19 +243,27 @@ def refine_combined_response(combined_response_text, question):
     """
     final_response = []
     try:
-        refinement = openai.ChatCompletion.create(
+        result = ""
+        botmsg = st.empty()  # Placeholder for real-time updating
+
+        for chunk in client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": formatted_prompt}],
-            temperature=0.6,
-            stream=True
-        )
-        for chunk in refinement:
-            if 'choices' in chunk and 'delta' in chunk['choices'][0] and 'content' in chunk['choices'][0]['delta']:
-                text = chunk['choices'][0]['delta']['content']
+            stream=True,
+            temperature=0.6
+        ):
+            text = chunk.choices[0].delta.content
+
+            if text is not None:
                 final_response.append(text)
+                result = "".join(final_response).strip()
+                botmsg.write(result)  # Update the Streamlit message in real-time
+
     except Exception as e:
         st.error(f"An error occurred during refinement: {e}")
+
     return "".join(final_response).strip()
+
 
 def handle_user_input(question):
     vectordbs = st.session_state.get("vectordbs", None)
