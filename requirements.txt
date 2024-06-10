@@ -3,7 +3,6 @@ pypdf2
 pytesseract
 PyMuPDF
 pdf2image
-openai
 langchain
 faiss-cpu
 pypdf
@@ -15,5 +14,4 @@ langchain-community
 poppler-utils
 reportlab
 langchain-openai
-openai>=1.0.0
 openai==0.28.0
