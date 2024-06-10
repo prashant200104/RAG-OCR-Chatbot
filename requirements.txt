@@ -3,8 +3,9 @@ pypdf2
 pytesseract
 PyMuPDF
 pdf2image
-langchain-core>=0.0.13,<0.1.0
+langchain-core==0.1.0
 langchain-community==0.0.1
+langchain-openai==0.1.2
 faiss-cpu
 pypdf
 tiktoken
@@ -13,5 +14,4 @@ databutton
 pysqlite3-binary
 poppler-utils
 reportlab
-langchain-openai
 openai==0.28.0
