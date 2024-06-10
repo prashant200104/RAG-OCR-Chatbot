@@ -3,7 +3,7 @@ pypdf2
 pytesseract
 PyMuPDF
 pdf2image
-langchain
+langchain-core==0.1.40
 faiss-cpu
 pypdf
 tiktoken
