@@ -137,7 +137,7 @@ def create_vectordb(image_pdf_files, image_pdf_filenames, text_pdf, text_pdf_fil
 
     # Process image PDFs
     image_vectordbs = get_index_for_pdf(
-        [file.getvalue() for file in image_pdf_files], image_pdf_filenames, openai_api_key st.secrets["OPENAI_API_KEY"] )
+        [file.getvalue() for file in image_pdf_files], image_pdf_filenames, openai_api_key = st.secrets["OPENAI_API_KEY"] )
 
     # Process text PDFs
     from brain_text import get_index_for_text_pdf
