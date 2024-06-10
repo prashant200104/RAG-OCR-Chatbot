@@ -237,6 +237,8 @@ def refine_combined_response(combined_response_text, question):
     formatted_prompt = f"""
     I have gathered the following information from multiple sources in response to the question: "{question}"
 
+    It is very importat - do not repeat the answer, arrange in proper format, order, indentation
+
     {combined_response_text}
 
     Please refine and improve the answer by making it more coherent and comprehensive and please do not repeat anything and output it in proper order.
