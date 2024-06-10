@@ -3,12 +3,12 @@ pypdf2
 pytesseract
 PyMuPDF
 pdf2image
-openai
 pdfminer.six
 tabula-py
-langchain
-langchain-openai
-langchain-community
+openai==0.28.0
+langchain==0.0.164  # Adjust the version based on compatibility with openai==0.28.0
+langchain-openai==0.0.3  # Adjust the version based on compatibility with openai==0.28.0
+langchain-community==0.0.7  # Adjust the version based on compatibility with langchain
 faiss-cpu
 pypdf
 tiktoken
