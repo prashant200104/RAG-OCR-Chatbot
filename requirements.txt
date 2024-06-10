@@ -6,7 +6,7 @@ pdf2image
 pdfminer.six
 tabula-py
 openai==0.28
-langchain==0.0.164  # or the latest version
+langchain
 langchain-openai>=0.0.3
 langchain-community>=0.0.7
 faiss-cpu
