@@ -11,6 +11,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 
 import PyPDF2
+from openai import OpenAI
 
 from dotenv import load_dotenv
 from PIL import Image
