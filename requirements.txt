@@ -3,7 +3,7 @@ pypdf2
 pytesseract
 PyMuPDF
 pdf2image
-pip install langchain-docstore
+langchain-docstore
 faiss-cpu
 pypdf
 tiktoken
