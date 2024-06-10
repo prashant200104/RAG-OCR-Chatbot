@@ -7,8 +7,8 @@ pdfminer.six
 tabula-py
 openai==0.28
 langchain
-langchain-openai>=0.0.3
-langchain-community>=0.0.7
+langchain-openai
+langchain-community
 faiss-cpu
 pypdf
 tiktoken
