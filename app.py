@@ -38,6 +38,7 @@ load_dotenv()
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
+
 from brain import get_index_for_pdf
 
 # Set the title for the Streamlit app
