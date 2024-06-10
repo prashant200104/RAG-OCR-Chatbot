@@ -3,7 +3,7 @@ pypdf2
 pytesseract
 PyMuPDF
 pdf2image
-openai
+openai==0.28
 langchain
 faiss-cpu
 pypdf
