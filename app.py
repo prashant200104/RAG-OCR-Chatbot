@@ -11,6 +11,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 
+client = openai.ChatCompletion
+
 import PyPDF2
 
 from dotenv import load_dotenv
