@@ -1,6 +1,3 @@
-import os
-# Initialize OpenAI client
-
 # Import necessary libraries
 __import__('pysqlite3')
 import sys
@@ -9,8 +6,22 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import databutton as db
 import streamlit as st
 import io
-
+from openai import OpenAI
 from dotenv import load_dotenv
+import os
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+load_dotenv()
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+from brain import get_index_for_pdf
+from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
+from langchain_community.vectorstores import FAISS
+
+# For Images
+from PIL import Image
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
 
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
