@@ -3,6 +3,7 @@ import os
 import io
 import tempfile
 from typing import Tuple, List
+import time
 
 from PIL import Image
 from reportlab.pdfgen import canvas
@@ -77,10 +78,13 @@ def initialize_session_state():
     if 'show_pdfs' not in st.session_state:
         st.session_state.show_pdfs = False
 
+
 def handle_file_uploads():
-    text_pdf_files = st.file_uploader("Upload Text PDF(s)", type="pdf", accept_multiple_files=True, key="text_pdf_upload")
-    uploaded_pdf_files = st.file_uploader("Scanned/Handwritten PDF(s)", type="pdf", accept_multiple_files=True)
-    image_files = st.file_uploader("Upload Image(s)", type=["png", "jpg", "jpeg", "gif"], accept_multiple_files=True, key="image_upload")
+    base_key = "file_upload_" + str(time.time())
+
+    text_pdf_files = st.file_uploader("Upload Text PDF(s)", type="pdf", accept_multiple_files=True, key=base_key + "_text_pdf")
+    uploaded_pdf_files = st.file_uploader("Scanned/Handwritten PDF(s)", type="pdf", accept_multiple_files=True, key=base_key + "_scanned_pdf")
+    image_files = st.file_uploader("Upload Image(s)", type=["png", "jpg", "jpeg", "gif"], accept_multiple_files=True, key=base_key + "_image")
 
     if uploaded_pdf_files is not None:
         for file in uploaded_pdf_files:
