@@ -203,6 +203,7 @@ def perform_similarity_search(vectordbs, question):
         pdf_extracts.append("\n".join([result.page_content for result in search_results]))
     return pdf_extracts
 
+
 def generate_initial_responses(pdf_extracts, question, document_names):
     combined_responses = []
     for extract, doc_name in zip(pdf_extracts, document_names):
@@ -229,9 +230,14 @@ def generate_initial_responses(pdf_extracts, question, document_names):
 
         except Exception as e:
             st.error(f"An error occurred: {e}")
+    
+    # Display the combined responses for each document
+    for doc_name, response in combined_responses:
+        with st.chat_message("assistant"):
+            st.write(f"From Document \"{doc_name}\" I received the following answer:")
+            st.write(response)
+
     return combined_responses
-
-
 
 def refine_combined_response(combined_response_text, question):
     formatted_prompt = f"""
