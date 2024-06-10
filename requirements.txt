@@ -6,6 +6,10 @@ pdf2image
 langchain-core==0.0.13
 langchain-community==0.0.1
 langchain-openai==0.0.6
+langchain-docstore==0.0.3
+langchain-text-splitter==0.0.3
+langchain-embeddings==0.0.4
+langchain-vectorstores==0.0.4
 faiss-cpu
 pypdf
 tiktoken
