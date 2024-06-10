@@ -209,20 +209,30 @@ def generate_initial_responses(pdf_extracts, question, document_names):
         individual_prompt = prompt_template.format(pdf_extract=extract)
         response = []
         try:
+            # Stream the completion response
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "system", "content": individual_prompt}, {"role": "user", "content": question}],
                 temperature=0.6,
                 stream=True
             )
+            result = ""
+            botmsg = st.empty()  # Placeholder for real-time updating
+
             for chunk in completion:
                 if 'choices' in chunk and 'delta' in chunk['choices'][0] and 'content' in chunk['choices'][0]['delta']:
                     text = chunk['choices'][0]['delta']['content']
-                    response.append(text)
-            combined_responses.append((doc_name, "".join(response).strip()))
+                    if text is not None:
+                        response.append(text)
+                        result = "".join(response).strip()
+                        botmsg.write(result)  # Update the Streamlit message in real-time
+
+            combined_responses.append((doc_name, result))
+
         except Exception as e:
             st.error(f"An error occurred: {e}")
     return combined_responses
+
 
 def refine_combined_response(combined_response_text, question):
     formatted_prompt = f"""
@@ -268,7 +278,7 @@ def handle_user_input(question):
 
     # Combine responses for final refinement
     combined_response_text = "\n\n".join([response for _, response in combined_responses])
-    final_result = refine_combined_response(combined_response_text, question)
+    #final_result = refine_combined_response(combined_response_text, question)
 
     st.session_state.prompt.append({"role": "user", "content": question})
     with st.chat_message("user"):
@@ -276,9 +286,9 @@ def handle_user_input(question):
 
     with st.chat_message("assistant"):
         botmsg = st.empty()
-        botmsg.write(final_result)
+        botmsg.write(combined_response_text)
 
-    st.session_state.prompt.append({"role": "assistant", "content": final_result})
+    st.session_state.prompt.append({"role": "assistant", "content": combined_response_text})
 
 def main():
     initialize_session_state()
