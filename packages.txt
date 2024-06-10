@@ -1,12 +1,4 @@
-poppler-utils
 tesseract-ocr
-
-openai
-pdf2image
-pillow
-pytesseract
-python-dotenv
-pdfminer.six
-tabula-py
-langchain
-langchain_community
+tesseract-ocr-eng
+poppler-utils
+libreoffice
