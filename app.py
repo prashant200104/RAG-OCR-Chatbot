@@ -243,7 +243,7 @@ def refine_combined_response(combined_response_text, question):
     formatted_prompt = """
     I have gathered the following information from multiple sources in response to the question: "{question}"
 
-    It is very importat - do not repeat the answer, arrange in proper format, order, indentation
+    It is very importat - do not repeat points in the answer, arrange in proper format, order, indentation
 
     {combined_response_text}
 
