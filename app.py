@@ -96,6 +96,7 @@ def handle_file_uploads():
 
     if text_pdf_files is not None:
         for file in text_pdf_files:
+            #text_content = extract_text_from_text_pdf(file)
             st.session_state.text_pdf_files.append((file.name, file))
 
     if 'vectordbs' not in st.session_state and (st.session_state.pdf_files or st.session_state.text_pdf_files):
@@ -103,10 +104,9 @@ def handle_file_uploads():
         pdf_buffers = [buffer for _, buffer in st.session_state.pdf_files]
         text_pdf_file_names = [name for name, _ in st.session_state.text_pdf_files]
         text_pdf = [text for _, text in st.session_state.text_pdf_files]
-
+        
         # Store document names for later use
         st.session_state.document_names = pdf_file_names + text_pdf_file_names
-
         st.session_state["vectordbs"] = create_vectordb(pdf_buffers, pdf_file_names, text_pdf, text_pdf_file_names)
 
 @st.cache_resource
