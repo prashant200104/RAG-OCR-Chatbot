@@ -5,7 +5,7 @@ PyMuPDF
 pdf2image
 pdfminer.six
 tabula-py
-openai
+openai==0.28
 langchain
 langchain-openai
 langchain-community
