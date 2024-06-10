@@ -97,7 +97,7 @@ def handle_user_input(question):
     pdf_extracts = perform_similarity_search(vectordbs, question)
     combined_responses = generate_initial_responses(pdf_extracts, question)
     combined_response_text = "\n\n".join(combined_responses)
-    final_result = refine_combined_response(combined_response_text, question)
+    #final_result = refine_combined_response(combined_response_text, question)
 
     st.session_state.prompt.append({"role": "user", "content": question})
     with st.chat_message("user"):
@@ -105,7 +105,7 @@ def handle_user_input(question):
 
     with st.chat_message("assistant"):
         botmsg = st.empty()
-        botmsg.write(final_result)
+        botmsg.write(combined_response_text)
 
     st.session_state.prompt.append({"role": "assistant", "content": final_result})
 
