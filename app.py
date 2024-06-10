@@ -146,8 +146,11 @@ def generate_initial_responses(pdf_extracts, question, document_names):
     for extract, doc_name in zip(pdf_extracts, document_names):
         individual_prompt = prompt_template.format(pdf_extract=extract)
         response = []
+        client = openai.OpenAI(
+        api_key =  st.secrets["OPENAI_API_KEY"]
+        )
         try:
-            completion = openai.ChatCompletion.create(
+            completion = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "system", "content": individual_prompt}, {"role": "user", "content": question}],
                 temperature=0.6,
