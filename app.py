@@ -240,14 +240,14 @@ def generate_initial_responses(pdf_extracts, question, document_names):
     return combined_responses
 
 def refine_combined_response(combined_response_text, question):
-    formatted_prompt = f"""
+    formatted_prompt = """
     I have gathered the following information from multiple sources in response to the question: "{question}"
 
     It is very importat - do not repeat the answer, arrange in proper format, order, indentation
 
     {combined_response_text}
 
-    Please refine and improve the answer by making it more coherent and comprehensive and please do not repeat anything and output it in proper order.
+    Please refine and improve the answer by making it more coherent and comprehensive.
     """
     final_response = []
     try:
@@ -258,7 +258,7 @@ def refine_combined_response(combined_response_text, question):
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": formatted_prompt}],
             stream=True,
-            temperature=0.6
+            temperature=0.2
         ):
             text = chunk.choices[0].delta.content
 
