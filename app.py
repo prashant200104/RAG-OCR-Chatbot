@@ -24,8 +24,8 @@ import streamlit as st
 import openai
 
 from langchain.chains import RetrievalQA
-from langchain_community.chat_models import ChatOpenAI
-from langchain_community.vectorstores import FAISS
+from langchain.chat_models import ChatOpenAI
+from langchain.vectorstores import FAISS
 
 
 from brain import get_index_for_pdf
