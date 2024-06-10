@@ -5,7 +5,7 @@ PyMuPDF
 pdf2image
 pdfminer.six
 tabula-py
-openai>=1.6.1
+openai==0.28
 langchain==0.0.164  # or the latest version
 langchain-openai>=0.0.3
 langchain-community>=0.0.7
