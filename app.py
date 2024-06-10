@@ -26,6 +26,9 @@ from langchain.chains import RetrievalQA
 from langchain_community.chat_models import ChatOpenAI
 from langchain_community.vectorstores import FAISS
 
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key= st.secrets["OPENAI_API_KEY"] ,)
+
 
 from brain import get_index_for_pdf
 
@@ -166,7 +169,6 @@ def generate_initial_responses(pdf_extracts, question, document_names):
     combined_responses = []
     for extract, doc_name in zip(pdf_extracts, document_names):
         individual_prompt = prompt_template.format(pdf_extract=extract)
-        client = openai.OpenAI(api_key=openai_api_key)
         response = []
         try:
             completion = client.chat.completions.create(
