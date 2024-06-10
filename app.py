@@ -4,6 +4,7 @@ import os
 import io
 import tempfile
 from typing import Tuple, List
+import asyncio
 
 from PIL import Image
 from reportlab.pdfgen import canvas
@@ -241,7 +242,7 @@ def main():
 
     question = st.chat_input("Ask anything")
     if question:
-        st.run_until_complete(handle_user_input(question))
+        asyncio.run(handle_user_input(question))
 
 if __name__ == "__main__":
     main()
