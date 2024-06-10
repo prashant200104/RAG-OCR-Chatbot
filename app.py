@@ -228,7 +228,7 @@ async def handle_user_input(question):
         botmsg = st.empty()
         botmsg.write(combined_response_text)
 
-    st.session_state.prompt.append({"role": "assistant", "content": final_result})
+    st.session_state.prompt.append({"role": "assistant", "content": combined_response_text})
 
 def main():
     initialize_session_state()
