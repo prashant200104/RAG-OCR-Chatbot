@@ -20,23 +20,18 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 import pytesseract
 import streamlit as st
-import openai
 
 from langchain.chains import RetrievalQA
 from langchain_community.chat_models import ChatOpenAI
 from langchain_community.vectorstores import FAISS
 
-
 from brain import get_index_for_pdf
-
 
 # Load environment variables
 load_dotenv()
 
 # Initialize OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
-
-from brain import get_index_for_pdf
 
 # Set the title for the Streamlit app
 st.title("RAG-OCR Enhanced Chatbot")
@@ -46,7 +41,7 @@ prompt_template = """
 
     Keep answer correct and to the point. Try to answer from context first.
 
-    Try answering in proper order and proper indentation do not output in paragpraph much, use bullet points and all.
+    Try answering in proper order and proper indentation do not output in paragraph much, use bullet points and all.
     
     If you did not get anything related to query Print "Did not get any Related Information", 
     
@@ -112,7 +107,6 @@ def handle_file_uploads():
 
     if text_pdf_files is not None:
         for file in text_pdf_files:
-            #text_content = extract_text_from_text_pdf(file)
             st.session_state.text_pdf_files.append((file.name, file))
 
     if 'vectordbs' not in st.session_state and (st.session_state.pdf_files or st.session_state.text_pdf_files):
@@ -124,7 +118,6 @@ def handle_file_uploads():
         # Store document names for later use
         st.session_state.document_names = pdf_file_names + text_pdf_file_names
         
-        
         st.session_state["vectordbs"] = create_vectordb(pdf_buffers, pdf_file_names, text_pdf, text_pdf_file_names)
 
 @st.cache_resource
@@ -133,17 +126,14 @@ def create_vectordb(image_pdf_files, image_pdf_filenames, text_pdf, text_pdf_fil
 
     # Process image PDFs
     image_vectordbs = get_index_for_pdf(
-        [file.getvalue() for file in image_pdf_files], image_pdf_filenames, openai_api_key = st.secrets["OPENAI_API_KEY"] )
+        [file.getvalue() for file in image_pdf_files], image_pdf_filenames, openai_api_key = st.secrets["OPENAI_API_KEY"])
 
     # Process text PDFs
     from brain_text import get_index_for_text_pdf
     text_vectordbs = get_index_for_text_pdf(
-        [file.getvalue() for file in text_pdf], text_pdf_file_names, openai_api_key = st.secrets["OPENAI_API_KEY"] )
-    
+        [file.getvalue() for file in text_pdf], text_pdf_file_names, openai_api_key = st.secrets["OPENAI_API_KEY"])
 
     return image_vectordbs + text_vectordbs
-    
-
 
 def initialize_prompt():
     if 'prompt' not in st.session_state:
@@ -162,13 +152,13 @@ def perform_similarity_search(vectordbs, question):
         pdf_extracts.append("\n".join([result.page_content for result in search_results]))
     return pdf_extracts
 
-def generate_initial_responses(pdf_extracts, question, document_names):
+async def generate_initial_responses(pdf_extracts, question, document_names):
     combined_responses = []
     for extract, doc_name in zip(pdf_extracts, document_names):
         individual_prompt = prompt_template.format(pdf_extract=extract)
         response = []
         try:
-            completion = openai.ChatCompletion.create(
+            completion = await openai.ChatCompletion.acreate(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "system", "content": individual_prompt}, {"role": "user", "content": question}],
                 temperature=0.6,
@@ -183,7 +173,7 @@ def generate_initial_responses(pdf_extracts, question, document_names):
             st.error(f"An error occurred: {e}")
     return combined_responses
 
-def refine_combined_response(combined_response_text, question):
+async def refine_combined_response(combined_response_text, question):
     formatted_prompt = f"""
     I have gathered the following information from multiple sources in response to the question: "{question}"
 
@@ -193,7 +183,7 @@ def refine_combined_response(combined_response_text, question):
     """
     final_response = []
     try:
-        refinement = openai.ChatCompletion.create(
+        refinement = await openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": formatted_prompt}],
             temperature=0.6,
@@ -207,7 +197,7 @@ def refine_combined_response(combined_response_text, question):
         st.error(f"An error occurred during refinement: {e}")
     return "".join(final_response).strip()
 
-def handle_user_input(question):
+async def handle_user_input(question):
     vectordbs = st.session_state.get("vectordbs", None)
     document_names = st.session_state.get("document_names", [])
 
@@ -217,7 +207,7 @@ def handle_user_input(question):
             st.stop()
 
     pdf_extracts = perform_similarity_search(vectordbs, question)
-    combined_responses = generate_initial_responses(pdf_extracts, question, document_names)
+    combined_responses = await generate_initial_responses(pdf_extracts, question, document_names)
     
     # Display individual document responses
     for doc_name, response in combined_responses:
@@ -227,7 +217,7 @@ def handle_user_input(question):
 
     # Combine responses for final refinement
     combined_response_text = "\n\n".join([response for _, response in combined_responses])
-    final_result = refine_combined_response(combined_response_text, question)
+    final_result = await refine_combined_response(combined_response_text, question)
 
     st.session_state.prompt.append({"role": "user", "content": question})
     with st.chat_message("user"):
@@ -251,7 +241,7 @@ def main():
 
     question = st.chat_input("Ask anything")
     if question:
-        handle_user_input(question)
+        st.run_until_complete(handle_user_input(question))
 
 if __name__ == "__main__":
     main()
