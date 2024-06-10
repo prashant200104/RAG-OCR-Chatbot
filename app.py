@@ -1,9 +1,9 @@
+import openai
 import re
 import os
 import io
 import tempfile
 from typing import Tuple, List
-import time
 
 from PIL import Image
 from reportlab.pdfgen import canvas
@@ -11,8 +11,13 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 
 import PyPDF2
+
 from dotenv import load_dotenv
+from PIL import Image
 from pdf2image import convert_from_path
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
 import pytesseract
 import streamlit as st
 import openai
@@ -21,7 +26,9 @@ from langchain.chains import RetrievalQA
 from langchain_community.chat_models import ChatOpenAI
 from langchain_community.vectorstores import FAISS
 
+
 from brain import get_index_for_pdf
+
 
 # Load environment variables
 load_dotenv()
@@ -29,16 +36,24 @@ load_dotenv()
 # Initialize OpenAI client
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
+from brain import get_index_for_pdf
+
 # Set the title for the Streamlit app
 st.title("RAG-OCR Enhanced Chatbot")
 
 prompt_template = """
-    You are a helpful Assistant who answers users' questions based on multiple contexts given to you.
-    Keep the answer correct and to the point. Try to answer from context first.
-    Try answering in proper order and proper indentation; do not output in paragraphs much, use bullet points and all.
-    If you did not get anything related to the query, print "Did not get any Related Information".
-    The evidence is the context of the PDF extract with metadata.
-    Only give a response and do not mention the source, page, or filename unless the user asks for it.
+    You are a helpful Assistant who answers to users questions based on multiple contexts given to you.
+
+    Keep answer correct and to the point. Try to answer from context first.
+
+    Try answering in proper order and proper indentation do not output in paragpraph much, use bullet points and all.
+    
+    If you did not get anything related to query Print "Did not get any Related Information", 
+    
+    The evidence are the context of the pdf extract with metadata. 
+    
+    Only give response and do not mention source or page or filename. If user asks for it, then tell.
+        
     The PDF content is:
     {pdf_extract}
 """
@@ -78,13 +93,10 @@ def initialize_session_state():
     if 'show_pdfs' not in st.session_state:
         st.session_state.show_pdfs = False
 
-
 def handle_file_uploads():
-    base_key = "file_upload_" + str(time.time())
-
-    text_pdf_files = st.file_uploader("Upload Text PDF(s)", type="pdf", accept_multiple_files=True, key=base_key + "_text_pdf")
-    uploaded_pdf_files = st.file_uploader("Scanned/Handwritten PDF(s)", type="pdf", accept_multiple_files=True, key=base_key + "_scanned_pdf")
-    image_files = st.file_uploader("Upload Image(s)", type=["png", "jpg", "jpeg", "gif"], accept_multiple_files=True, key=base_key + "_image")
+    text_pdf_files = st.file_uploader("Upload Text PDF(s)", type="pdf", accept_multiple_files=True, key="text_pdf_upload")
+    uploaded_pdf_files = st.file_uploader("Scanned/Handwritten PDF(s)", type="pdf", accept_multiple_files=True)
+    image_files = st.file_uploader("Upload Image(s)", type=["png", "jpg", "jpeg", "gif"], accept_multiple_files=True, key="image_upload")
 
     if uploaded_pdf_files is not None:
         for file in uploaded_pdf_files:
@@ -111,6 +123,8 @@ def handle_file_uploads():
         
         # Store document names for later use
         st.session_state.document_names = pdf_file_names + text_pdf_file_names
+        
+        
         st.session_state["vectordbs"] = create_vectordb(pdf_buffers, pdf_file_names, text_pdf, text_pdf_file_names)
 
 @st.cache_resource
@@ -119,14 +133,17 @@ def create_vectordb(image_pdf_files, image_pdf_filenames, text_pdf, text_pdf_fil
 
     # Process image PDFs
     image_vectordbs = get_index_for_pdf(
-        [file.getvalue() for file in image_pdf_files], image_pdf_filenames, openai_api_key=st.secrets["OPENAI_API_KEY"])
+        [file.getvalue() for file in image_pdf_files], image_pdf_filenames, openai_api_key = openai_api_key )
 
     # Process text PDFs
     from brain_text import get_index_for_text_pdf
     text_vectordbs = get_index_for_text_pdf(
-        [file.getvalue() for file in text_pdf], text_pdf_file_names, openai_api_key=st.secrets["OPENAI_API_KEY"])
+        [file.getvalue() for file in text_pdf], text_pdf_file_names, openai_api_key = openai_api_key )
+    
 
     return image_vectordbs + text_vectordbs
+    
+
 
 def initialize_prompt():
     if 'prompt' not in st.session_state:
@@ -150,11 +167,8 @@ def generate_initial_responses(pdf_extracts, question, document_names):
     for extract, doc_name in zip(pdf_extracts, document_names):
         individual_prompt = prompt_template.format(pdf_extract=extract)
         response = []
-        client = openai.OpenAI(
-        api_key =  st.secrets["OPENAI_API_KEY"]
-        )
         try:
-            completion = client.chat.completions.create(
+            completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "system", "content": individual_prompt}, {"role": "user", "content": question}],
                 temperature=0.6,
@@ -204,7 +218,7 @@ def handle_user_input(question):
 
     pdf_extracts = perform_similarity_search(vectordbs, question)
     combined_responses = generate_initial_responses(pdf_extracts, question, document_names)
-
+    
     # Display individual document responses
     for doc_name, response in combined_responses:
         with st.chat_message("assistant"):
@@ -224,24 +238,20 @@ def handle_user_input(question):
         botmsg.write(final_result)
 
     st.session_state.prompt.append({"role": "assistant", "content": final_result})
-    
+
 def main():
     initialize_session_state()
     initialize_prompt()
     handle_file_uploads()
-
+    
     # Print document names for testing
     st.write("Documents array:", st.session_state.get("document_names", []))
-
+    
     display_chat_history()
 
-    question = st.text_input("Ask anything")
+    question = st.chat_input("Ask anything")
     if question:
         handle_user_input(question)
-
-if __name__ == "__main__":
-    main()
-
 
 if __name__ == "__main__":
     main()
