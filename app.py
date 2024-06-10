@@ -159,7 +159,7 @@ async def generate_initial_responses(pdf_extracts, question, document_names):
         individual_prompt = prompt_template.format(pdf_extract=extract)
         response = []
         try:
-            completion = await openai.ChatCompletion.acreate(
+            completion = await client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "system", "content": individual_prompt}, {"role": "user", "content": question}],
                 temperature=0.6,
@@ -184,7 +184,7 @@ async def refine_combined_response(combined_response_text, question):
     """
     final_response = []
     try:
-        refinement = await openai.ChatCompletion.acreate(
+        refinement = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": formatted_prompt}],
             temperature=0.6,
