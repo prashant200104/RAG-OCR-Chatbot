@@ -12,6 +12,8 @@ import io
 
 from dotenv import load_dotenv
 
+openai_api_key = st.secrets["OPENAI_API_KEY"]
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 os.environ["OPENAI_API_KEY"] = openai_api_key
 load_dotenv()
 
@@ -26,8 +28,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 
-openai_api_key = st.secrets["OPENAI_API_KEY"]
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 import openai
 import re
 import os
