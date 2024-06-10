@@ -220,20 +220,24 @@ def handle_user_input(question):
         botmsg.write(final_result)
 
     st.session_state.prompt.append({"role": "assistant", "content": final_result})
-
+    
 def main():
     initialize_session_state()
     initialize_prompt()
     handle_file_uploads()
-    
+
     # Print document names for testing
     st.write("Documents array:", st.session_state.get("document_names", []))
-    
+
     display_chat_history()
 
-    question = st.chat_input("Ask anything")
+    question = st.text_input("Ask anything")
     if question:
-        asyncio.run(handle_user_input(question))
+        handle_user_input(question)
+
+if __name__ == "__main__":
+    main()
+
 
 if __name__ == "__main__":
     main()
