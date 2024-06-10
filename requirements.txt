@@ -17,3 +17,4 @@ databutton
 pysqlite3-binary
 poppler-utils
 reportlab
+aiohttp
