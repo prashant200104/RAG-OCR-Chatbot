@@ -8,6 +8,7 @@ from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
 import streamlit as st
+from openai import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.docstore.document import Document
 from langchain_community.docstore.document import Document
