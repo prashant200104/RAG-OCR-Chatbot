@@ -240,7 +240,7 @@ def generate_initial_responses(pdf_extracts, question, document_names):
     return combined_responses
 
 def refine_combined_response(combined_response_text, question):
-    formatted_prompt = """
+    formatted_prompt = f"""
     I have gathered the following information from multiple sources in response to the question: "{question}"
 
     It is very importat - do not repeat points in the answer, arrange in proper format, order, indentation
