@@ -24,7 +24,7 @@ import pytesseract
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.docstore.document import Document
 from langchain_community.docstore.document import Document
-#from langchain_openai.embeddings import OpenAIEmbeddings
+from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 
