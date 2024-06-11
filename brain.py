@@ -101,16 +101,8 @@ def text_to_docs(text: List[str], filename: str) -> List[Document]:
     return doc_chunks
 
 def docs_to_index(docs, openai_api_key):
-    try:
-        embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-        index = FAISS.from_documents(docs, embeddings)
-        return index
-    except openai.APIError as e:  # Correct the attribute name here
-        st.error(f"OpenAI API error: {e}")
-        raise
-    except Exception as e:
-        st.error(f"Error in docs_to_index: {e}")
-        raise
+    index = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key = openai_api_key))
+    return index
 
 
 def get_index_for_pdf(pdf_files, pdf_names, openai_api_key):
