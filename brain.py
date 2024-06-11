@@ -1,3 +1,17 @@
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+import databutton as db
+import streamlit as st
+import io
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+load_dotenv()
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
 import re
 import os
 from io import BytesIO
