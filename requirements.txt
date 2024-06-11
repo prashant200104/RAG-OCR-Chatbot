@@ -13,6 +13,6 @@ databutton
 pysqlite3-binary
 poppler-utils
 reportlab
-langchain_community
+langchain-community
 langchain-openai
 
