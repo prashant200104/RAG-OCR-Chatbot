@@ -287,23 +287,23 @@ def handle_user_input(question):
     
     # Display individual document responses
     for doc_name, response in combined_responses:
-        with st.chat_message("assistant"):
-            st.write(f"From Document \"{doc_name}\" I received the following answer:")
-            st.write(response)
+        st.write(f"From Document \"{doc_name}\" I received the following answer:")
+        st.write(response)
 
-    # Combine responses for final refinement
-    combined_response_text = "\n\n".join([response for _, response in combined_responses])
-    #final_result = refine_combined_response(combined_response_text, question)
+    # Remove combined response logic
+    # combined_response_text = "\n\n".join([response for _, response in combined_responses])
+    # final_result = refine_combined_response(combined_response_text, question)
 
     st.session_state.prompt.append({"role": "user", "content": question})
-    with st.chat_message("user"):
-        st.write(question)
+    st.write(f"Question: {question}")
 
-    with st.chat_message("assistant"):
-        botmsg = st.empty()
-        botmsg.write(combined_response_text)
+    # Remove the combined response display
+    # with st.chat_message("assistant"):
+    #     botmsg = st.empty()
+    #     botmsg.write(combined_response_text)
 
-    st.session_state.prompt.append({"role": "assistant", "content": combined_response_text})
+    # st.session_state.prompt.append({"role": "assistant", "content": combined_response_text})
+
 
 def main():
     initialize_session_state()
