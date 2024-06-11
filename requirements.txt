@@ -17,3 +17,4 @@ langchain-community
 langchain_openai
 langchain_core
 pdfminer.six
+tabula
