@@ -15,6 +15,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 import openai
 
+openai_api_key = st.secrets["OPENAI_API_KEY"]
+
 
 # Load environment variables
 load_dotenv()
@@ -112,7 +114,6 @@ def get_index_for_pdf(pdf_files, pdf_names, openai_api_key):
 
 # Main code execution
 def main():
-    openai_api_key = os.getenv("OPENAI_API_KEY")
     if not openai_api_key:
         st.error("OpenAI API key not found. Please set it in the environment variables.")
         return
