@@ -224,7 +224,7 @@ def generate_initial_responses(pdf_extracts, question, document_names):
                 if text is not None:
                     response.append(text)
                     result = "".join(response).strip()
-                    botmsg.write(result)  # Update the Streamlit message in real-time
+                    #botmsg.write(result)  # Update the Streamlit message in real-time
 
             combined_responses.append((doc_name, result))
 
