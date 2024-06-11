@@ -15,6 +15,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 import openai
 
+
 # Load environment variables
 load_dotenv()
 
@@ -88,7 +89,7 @@ def docs_to_index(docs, openai_api_key):
         embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
         index = FAISS.from_documents(docs, embeddings)
         return index
-    except openai.error.OpenAIError as e:  # Correct the attribute name here
+    except openai.APIError as e:  # Correct the attribute name here
         st.error(f"OpenAI API error: {e}")
         raise
     except Exception as e:
