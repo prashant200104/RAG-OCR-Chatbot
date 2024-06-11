@@ -15,3 +15,4 @@ langchain-community
 poppler-utils
 reportlab
 langchain-openai
+langchain_community
