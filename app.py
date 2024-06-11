@@ -284,26 +284,22 @@ def handle_user_input(question):
 
     pdf_extracts = perform_similarity_search(vectordbs, question)
     combined_responses = generate_initial_responses(pdf_extracts, question, document_names)
-    
-    # Display individual document responses
-    for doc_name, response in combined_responses:
-        st.write(f"From Document \"{doc_name}\" I received the following answer:")
-        st.write(response)
 
     # Remove combined response logic
     # combined_response_text = "\n\n".join([response for _, response in combined_responses])
     # final_result = refine_combined_response(combined_response_text, question)
 
     st.session_state.prompt.append({"role": "user", "content": question})
-    st.write(f"Question: {question}")
+    with st.chat_message("user"):
+        st.write(question)
 
-    # Remove the combined response display
-    # with st.chat_message("assistant"):
-    #     botmsg = st.empty()
-    #     botmsg.write(combined_response_text)
+    # Display individual document responses
+    with st.chat_message("assistant"):
+        for doc_name, response in combined_responses:
+            st.write(f"From Document \"{doc_name}\" I received the following answer:")
+            st.write(response)
 
-    # st.session_state.prompt.append({"role": "assistant", "content": combined_response_text})
-
+    st.session_state.prompt.append({"role": "assistant", "content": combined_responses})
 
 def main():
     initialize_session_state()
