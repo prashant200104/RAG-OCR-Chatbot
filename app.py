@@ -272,7 +272,6 @@ def refine_combined_response(combined_response_text, question):
 
     return "".join(final_response).strip()
 
-
 def handle_user_input(question):
     vectordbs = st.session_state.get("vectordbs", None)
     document_names = st.session_state.get("document_names", [])
@@ -284,22 +283,28 @@ def handle_user_input(question):
 
     pdf_extracts = perform_similarity_search(vectordbs, question)
     combined_responses = generate_initial_responses(pdf_extracts, question, document_names)
+    
+    # Display individual document responses
+    
+    text = ""
+    for doc_name, response in combined_responses:
+        with st.chat_message("assistant"):
+            st.write(f"From Document \"{doc_name}\" I received the following answer:")
+            st.write(response)
 
-    # Remove combined response logic
-    # combined_response_text = "\n\n".join([response for _, response in combined_responses])
-    # final_result = refine_combined_response(combined_response_text, question)
+    # Combine responses for final refinement
+    combined_response_text = "\n\n".join([response for _, response in combined_responses])
+    final_result = refine_combined_response(combined_response_text, question)
 
     st.session_state.prompt.append({"role": "user", "content": question})
     with st.chat_message("user"):
         st.write(question)
 
-    # Display individual document responses
     with st.chat_message("assistant"):
-        for doc_name, response in combined_responses:
-            st.write(f"From Document \"{doc_name}\" I received the following answer:")
-            st.write(response)
+        botmsg = st.empty()
+        botmsg.write(final_result)
 
-    st.session_state.prompt.append({"role": "assistant", "content": combined_responses})
+    st.session_state.prompt.append({"role": "assistant", "content": final_result})
 
 def main():
     initialize_session_state()
