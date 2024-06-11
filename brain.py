@@ -89,9 +89,8 @@ def text_to_docs(text: List[str], filename: str) -> List[Document]:
             doc.metadata["filename"] = filename
             doc_chunks.append(doc)
     return doc_chunks
-
 def docs_to_index(docs, openai_api_key):
-    index = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key = openai_api_key))
+    index = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key = st.secrets["OPENAI_API_KEY"]))
     return index
 
 def get_index_for_pdf(pdf_files, pdf_names, openai_api_key):
