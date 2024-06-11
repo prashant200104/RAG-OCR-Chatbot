@@ -11,6 +11,24 @@ from PIL import Image
 import pytesseract
 from langchain.docstore.document import Document
 
+import re
+import os
+from io import BytesIO
+from typing import Tuple, List
+import tempfile
+from dotenv import load_dotenv
+from pdf2image import convert_from_path
+from PIL import Image
+import pytesseract
+
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.docstore.document import Document
+from langchain_community.docstore.document import Document
+#from langchain_openai.embeddings import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import FAISS
+
+
 # Load environment variables
 load_dotenv()
 
