@@ -3,8 +3,8 @@ pypdf2
 pytesseract
 PyMuPDF
 pdf2image
-langchain==0.0.316
-openai==0.28.1
+langchain
+openai
 faiss-cpu
 pypdf
 tiktoken
