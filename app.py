@@ -265,7 +265,7 @@ def refine_combined_response(combined_response_text, question):
             if text is not None:
                 final_response.append(text)
                 result = "".join(final_response).strip()
-                botmsg.write(result)  # Update the Streamlit message in real-time
+                #botmsg.write(result)  # Update the Streamlit message in real-time
 
     except Exception as e:
         st.error(f"An error occurred during refinement: {e}")
