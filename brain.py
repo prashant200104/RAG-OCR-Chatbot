@@ -14,22 +14,20 @@ from langchain.docstore.document import Document
 # Load environment variables
 load_dotenv()
 
-# Debug: Print environment variable values
-print(f"TESSDATA_PREFIX set to: {os.environ.get('TESSDATA_PREFIX')}")
-print(f"OPENAI_API_KEY set to: {os.getenv('OPENAI_API_KEY')}")
-print(f"OPENAI_API_KEY from st.secrets: {st.secrets.get('OPENAI_API_KEY')}")
-
-assert os.getenv("OPENAI_API_KEY") is not None, "OpenAI API key is not set in the environment variables."
-assert st.secrets.get("OPENAI_API_KEY") is not None, "OpenAI API key is not set in Streamlit secrets."
-
 # Set the TESSDATA_PREFIX environment variable to the current directory
 tessdata_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ["TESSDATA_PREFIX"] = tessdata_dir
+
+# Debug: Print the TESSDATA_PREFIX value
+print(f"TESSDATA_PREFIX set to: {os.environ['TESSDATA_PREFIX']}")
 
 # Ensure the TESSDATA_PREFIX is set correctly
 tessdata_path = os.path.join(tessdata_dir, "eng.traineddata")
 assert os.path.exists(tessdata_path), \
     f"TESSDATA_PREFIX is not set correctly or eng.traineddata is missing. Expected at {tessdata_path}"
+
+# Set other environment variables or configurations
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 # Set the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
@@ -43,6 +41,9 @@ from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
 import faiss
+
+# Set the path to the Tesseract executable
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 def pdf_to_images(pdf_file):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
@@ -98,14 +99,7 @@ def text_to_docs(text: List[str], filename: str) -> List[Document]:
     return doc_chunks
 
 def docs_to_index(docs, openai_api_key):
-    # Debug: Check the number of documents
-    print(f"Number of documents: {len(docs)}")
-
-    # Debug: Print a sample document
-    if docs:
-        print(f"Sample document: {docs[0].page_content}")
-
-    index = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"]))
+    index = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key = st.secrets["OPENAI_API_KEY"]))
     return index
 
 def get_index_for_pdf(pdf_files, pdf_names, openai_api_key):
@@ -115,13 +109,3 @@ def get_index_for_pdf(pdf_files, pdf_names, openai_api_key):
         documents = documents + text_to_docs(text, filename)
     index = docs_to_index(documents, openai_api_key)
     return index
-
-@st.cache_data(show_spinner=False)
-def create_vectordb(pdf_buffers, pdf_file_names, text_pdf, text_pdf_file_names):
-    # Debug: Print input lengths
-    print(f"PDF Buffers length: {len(pdf_buffers)}, PDF File Names length: {len(pdf_file_names)}")
-
-    # Process PDFs
-    image_vectordbs = get_index_for_pdf(pdf_buffers, pdf_file_names, st.secrets["OPENAI_API_KEY"])
-
-    return image_vectordbs
