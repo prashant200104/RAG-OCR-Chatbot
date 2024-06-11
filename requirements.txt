@@ -11,8 +11,5 @@ tiktoken
 streamlit
 databutton
 pysqlite3-binary
-langchain-community
 poppler-utils
 reportlab
-langchain-openai
-langchain_community
