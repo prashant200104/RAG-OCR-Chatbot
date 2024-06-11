@@ -11,8 +11,6 @@ import streamlit as st
 
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.docstore.document import Document
-from langchain_community.docstore.document import Document
-#from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 
@@ -85,15 +83,43 @@ def text_to_docs(text: List[str], filename: str) -> List[Document]:
     return doc_chunks
 
 def docs_to_index(docs, openai_api_key):
-    index = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key = openai_api_key))
-    return index
+    try:
+        embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+        index = FAISS.from_documents(docs, embeddings)
+        return index
+    except Exception as e:
+        st.error(f"Error in docs_to_index: {e}")
+        raise
 
 def get_index_for_pdf(pdf_files, pdf_names, openai_api_key):
     indices = []
     for pdf_file, pdf_name in zip(pdf_files, pdf_names):
-        text, filename = parse_pdf(BytesIO(pdf_file), pdf_name)
-        docs = text_to_docs(text, filename)
-        index = docs_to_index(docs, openai_api_key)
-        indices.append(index)
+        try:
+            text, filename = parse_pdf(BytesIO(pdf_file), pdf_name)
+            docs = text_to_docs(text, filename)
+            index = docs_to_index(docs, openai_api_key)
+            indices.append(index)
+        except Exception as e:
+            st.error(f"Error processing {pdf_name}: {e}")
+            continue
     return indices
 
+# Main code execution
+def main():
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    if not openai_api_key:
+        st.error("OpenAI API key not found. Please set it in the environment variables.")
+        return
+
+    st.title("PDF to FAISS Index")
+
+    uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
+    if uploaded_files:
+        pdf_buffers = [file.read() for file in uploaded_files]
+        pdf_file_names = [file.name for file in uploaded_files]
+
+        indices = get_index_for_pdf(pdf_buffers, pdf_file_names, openai_api_key)
+        st.write("Indexing complete!")
+
+if __name__ == "__main__":
+    main()
