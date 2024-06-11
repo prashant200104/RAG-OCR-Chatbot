@@ -88,12 +88,13 @@ def docs_to_index(docs, openai_api_key):
         embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
         index = FAISS.from_documents(docs, embeddings)
         return index
-    except openai.error.OpenAIError as e:
+    except openai.error.OpenAIError as e:  # Correct the attribute name here
         st.error(f"OpenAI API error: {e}")
         raise
     except Exception as e:
         st.error(f"Error in docs_to_index: {e}")
         raise
+
 
 def get_index_for_pdf(pdf_files, pdf_names, openai_api_key):
     indices = []
