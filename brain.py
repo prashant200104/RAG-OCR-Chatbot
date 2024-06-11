@@ -42,6 +42,9 @@ from PIL import Image
 import pytesseract
 import faiss
 
+# Ensure this import path is correct
+# from langchain_core.language_models.chat_models import LangSmithParams
+
 # Set the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
