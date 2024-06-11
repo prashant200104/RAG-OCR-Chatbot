@@ -232,10 +232,10 @@ def generate_initial_responses(pdf_extracts, question, document_names):
             st.error(f"An error occurred: {e}")
     
     # Display the combined responses for each document
-    for doc_name, response in combined_responses:
-        with st.chat_message("assistant"):
-            st.write(f"From Document \"{doc_name}\" I received the following answer:")
-            st.write(response)
+    #for doc_name, response in combined_responses:
+        #with st.chat_message("assistant"):
+            #st.write(f"From Document \"{doc_name}\" I received the following answer:")
+            #st.write(response)
 
     return combined_responses
 
