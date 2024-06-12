@@ -311,7 +311,7 @@ def main():
     handle_file_uploads()
     
     # Print document names for testing
-    st.write("Documents array:", st.session_state.get("document_names", []))
+    #st.write("Documents array:", st.session_state.get("document_names", []))
     
     display_chat_history()
 
