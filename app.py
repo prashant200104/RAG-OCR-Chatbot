@@ -286,11 +286,10 @@ def handle_user_input(question):
     
     # Display individual document responses
     
-    text = ""
-    for doc_name, response in combined_responses:
-        with st.chat_message("assistant"):
-            st.write(f"From Document \"{doc_name}\" I received the following answer:")
-            st.write(response)
+    #for doc_name, response in combined_responses:
+        #with st.chat_message("assistant"):
+            #st.write(f"From Document \"{doc_name}\" I received the following answer:")
+            #st.write(response)
 
     # Combine responses for final refinement
     combined_response_text = "\n\n".join([response for _, response in combined_responses])
